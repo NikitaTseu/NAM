@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Other
+.vs/
+*.docx
+Debug/
+Release/
+*.vcxproj.filters
+*.vcxproj.user
+out.txt
+output.txt
+*.out
+task_files/
+*.sln
