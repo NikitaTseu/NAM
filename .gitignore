@@ -33,7 +33,6 @@
 
 # Other
 .vs/
-*.docx
 Debug/
 Release/
 *.vcxproj.filters

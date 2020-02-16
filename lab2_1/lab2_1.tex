@@ -1,0 +1,272 @@
+\documentclass{article}%
+\usepackage[T2A]{fontenc}%
+\usepackage[utf8]{inputenc}%
+\usepackage{lmodern}%
+\usepackage{textcomp}%
+\usepackage{lastpage}%
+\usepackage[russian]{babel}%
+\usepackage{titling}%
+\usepackage{nopageno}%
+\usepackage{amsfonts}%
+\usepackage{amssymb}%
+\usepackage{amsmath}%
+\usepackage[left=2cm,right=2cm, top=2cm,bottom=2cm]{geometry}%
+\usepackage{circuitikz}%
+
+\begin{document}%
+
+\begin{titlepage}
+  \begin{center}
+    \large
+    Министерство образования Республики Беларусь\\
+    \vspace{0.5cm}
+    БЕЛОРУССКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ
+    \vspace{0.5cm}
+     
+    Факультет прикладной математики и информатики
+\bigskip
+\vfill
+\vfill
+\vfill
+\vfill
+\centerline{\Large \bf Лабораторная работа 1}
+    \vspace{0.5cm}
+\centerline{"Численные методы решения задачи Коши для ОДУ"}
+\end{center}
+
+\vspace*{\fill}
+\vfill
+\vfill
+\vfill
+\hfill
+\begin{minipage}{0.25\textwidth}
+{   Подготовил:\\ студент 3 курса 3 группы\\ Тев Никита Михайлович\\}
+\end{minipage}
+
+\mbox{}
+\vfill
+\hfill
+\begin{minipage}{0.25\textwidth}
+  {\large{\bf Преподаватель: } 
+{\it\\ Горбачёва Юлия \\ Николаевна}}
+\end{minipage}
+
+\vspace*{\fill}
+\vfill
+\vfill
+\vfill
+\vfill
+\vfill
+\vfill
+\vfill
+\vfill
+\vfill
+\vspace*{\fill}
+\begin{center}
+Минск, 2019 г.
+\end{center}
+\end{titlepage}
+
+\begin{enumerate}%
+\item%
+\underline{Постановка задачи}
+
+Задачу Коши для данного дифференциального уравнения второго порядка преобразовать к задаче Коши для системы двух дифференциальных уравнений первого порядка. Найти решение последней задачи на отрезке $[a, b]$ с шагом $\tau = 0.05$ указанными методами. Оценить погрешность численного решения с помощью правила Рунге (для одношаговых методов). Сравнить численное решение с известным аналитическим решением $u(t)$.
+
+\item%
+\underline{Входные данные}
+
+\includegraphics[scale=1.0]{data.png}
+
+\item%
+\underline{Краткие теоретические сведения}
+
+Данное ДУ второго порядка преобразуем к задаче Коши для системы двух ДУ первого порядка c помощью следующей замены:
+
+$\begin{cases} 
+U_1(t) = U(t) \\ U_2(t) = U'_1(t) = U'(t) 
+\end{cases}$
+
+Получим задачу Коши:
+
+$\begin{cases} 
+U'_1(t) = f_1(t, U_1(t), U_2(t)) = U_2(t) \\ U'_2(t) = f_2(t, U_1(t), U_2(t)) = -t U_2(t) - \frac{t^2-2}{t^2} U_1(t) \\ U_1(1) = 1,\,  U_2(1)=-1
+\end{cases}$
+
+\vskip 0.2in
+
+Тогда метод Рунге-Кутта 3 порядка (3 порядок точности) для данной задачи будет иметь следующий вид:
+
+$\begin{cases} 
+y_{1,j+1} =  y_{1,j} + \frac{\tau}{6} (k_1 +4k_2+k_3) \\ y_{2,j+1} =  y_{2,j} + \frac{\tau}{6} (q_1 +4q_2+q_3) \\ k_1 = y_{2,j} \\ q_1 = -t_j y_{2,j} -  \frac{t_j^2-2}{t_j^2}   y_{1,j} \\
+k_2 =  y_{2,j} + \frac{1}{2} \tau q_1 \\ q_2 = -(t_j + \frac{1}{2} \tau)(y_{2,j} + \frac{1}{2} \tau q_1) -  \frac{(t_j+ \frac{1}{2} \tau)^2-2}{(t_j+ \frac{1}{2} \tau)^2}  (y_{1,j} + \frac{1}{2} \tau k_1) \\
+k_3 =  y_{2,j} - \tau q_1 + 2\tau q_2 \\ q_3 = -(t_j + \tau)( y_{2,j} - \tau q_1 + 2\tau q_2) -  \frac{(t_j+ \tau)^2-2}{(t_j+ \tau)^2}  (y_{1,j} - \tau k_1 + 2\tau k_2) \\ y_{1,0} = 1, \, y_{2,0} = -1, \, j = \overline{0,19}
+\end{cases}$
+
+\vskip 0.2in
+
+Экстраполяционный метод Адамса 3 порядка (3 порядок точности):
+
+$\begin{cases} 
+y_{1,j+1} =  y_{1,j} + \frac{\tau}{12} (23y_{2,j} - 16y_{2,j-1} + 5y_{2,j-2}) \\ y_{2,j+1} =  y_{2,j} + \frac{\tau}{12} (23(-t_j y_{2,j} -  \frac{t_j^2-2}{t_j^2}   y_{1,j}) - 16(-t_{j-1} y_{2,j-1} -  \frac{t_{j-1}^2-2}{t_{j-1}^2}   y_{1,j-1}) + 5(-t_{j-2} y_{2,j-2} -  \frac{t_{j-2}^2-2}{t_{j-2}^2}   y_{1,j-2}) \\ j = \overline{2,19}
+\end{cases}$
+
+Метод является многостадийным, поэтому значения в первых трёх точках берем из метода Рунге-Кутта.
+
+\vskip 0.2in
+
+Неявный метод трапеций (2 порядок точности):
+
+$\begin{cases} 
+y_{1,j+1} =  y_{1,j} + \frac{\tau}{2} (y_{2,j} + y_{2,j+1}) \\ y_{2,j+1} =  y_{2,j} + \frac{\tau}{2} (-t_j y_{2,j} -  \frac{t_j^2-2}{t_j^2}   y_{1,j} - t_{j+1} y_{2,j+1} -  \frac{t_{j+1}^2-2}{t_{j+1}^2}   y_{1,j+1}) \\ j = \overline{0,19}
+\end{cases}$
+
+В неявном методе трапеций на каждой итерации возникает ситема уравнений относительно $y_{1,j+1}$ и $y_{2,j+1}$, однако, её можно легко разрешить, воспользовавшись методом Гаусса.
+
+\item%
+\underline{Листинг программы}
+
+\begin{verbatim}
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+
+a, b, step, step2 = (1.0, 2.0, 0.05, 0.1)
+u1_0, u2_0 = (1, -1)
+n = int((b-a)/step)+1
+n2 = int((b-a)/step2)+1
+
+t = np.linspace(a, b, n)
+t2 = np.linspace(a, b, n2)
+y1_0 = 1/t
+y2_0 = -1/(t**2)
+
+y1r = np.zeros(n, dtype = float)
+y1a = np.zeros(n, dtype = float)
+y1t = np.zeros(n, dtype = float)
+y1r_2 = np.zeros(n2, dtype = float)
+y1t_2 = np.zeros(n2, dtype = float)
+y1r[0], y1a[0], y1t[0], y1r_2[0], y1t_2[0] = u1_0, u1_0, u1_0, u1_0, u1_0
+
+y2r = np.zeros(n, dtype = float)
+y2a = np.zeros(n, dtype = float)
+y2t = np.zeros(n, dtype = float)
+y2r_2 = np.zeros(n2, dtype = float)
+y2t_2 = np.zeros(n2, dtype = float)
+y2r[0], y2a[0], y2t[0], y2r_2[0], y2t_2[0] = u2_0, u2_0, u2_0, u2_0, u2_0
+
+
+# ## Part 2: Implementing mathematical methods
+
+def fx(x):
+    return (x**2 - 2)/x**2
+
+
+def f1(t, y1, y2):
+    return y2
+
+def f2(t, y1, y2):
+    return -t*y2 - ((t**2 - 2)/t**2)*y1
+
+
+# #### 2.1: Runge–Kutta method
+
+def runge_iteration_y(t, y1, y2, j, step):
+    k1 = f1(t[j], y1[j], y2[j])
+    q1 = f2(t[j], y1[j], y2[j])
+    k2 = f1(t[j] + step/2, y1[j] + k1*step/2, y2[j] + q1*step/2)
+    q2 = f2(t[j] + step/2, y1[j] + k1*step/2, y2[j] + q1*step/2)
+    k3 = f1(t[j] + step, y1[j] - k1*step + 2*k2*step, y2[j] - q1*step + 2*q2*step)
+    q3 = f2(t[j] + step, y1[j] - k1*step + 2*k2*step, y2[j] - q1*step + 2*q2*step)
+    return (y1[j] + (step/6)*(k1 + 4*k2 + k3), y2[j] + (step/6)*(q1 + 4*q2 + q3))
+
+# #### 2.2: Adams' method
+
+def adams_iteration_y1(t, y1, y2, j, step):
+    return y1[j] + (step/12)*(23 * f1(t[j], y1[j], y2[j]) - 
+                              16 * f1(t[j-1], y1[j-1], y2[j-1]) + 
+                              5 * f1(t[j-2], y1[j-2], y2[j-2]))
+
+
+
+def adams_iteration_y2(t, y1, y2, j, step):
+    return y2[j] + (step/12)*(23 * f2(t[j], y1[j], y2[j]) - 
+                              16 * f2(t[j-1], y1[j-1], y2[j-1]) + 
+                              5 * f2(t[j-2], y1[j-2], y2[j-2]))
+
+
+							  
+# #### 2.3: Trapezium method
+
+def trapezium_iteration(t, y1, y2, j, step):
+    a1 = step/2
+    b1 = y1[j] + step*y2[j]/2
+    a2 = step*t[j+1]/2
+    b2 = y2[j] - step*t[j]*y2[j]/2 - step*fx(t[j])*y1[j]/2
+    c2 = step*fx(t[j+1])/2
+    
+    x2 = (b2 - c2*b1)/(1 + a2 + c2*a1)
+    x1 = b1 + a1*x2
+    return (x1, x2)
+
+
+# ## Part 3: Value table calculation 
+
+for j in range(1, n):
+    y1r[j],y2r[j] = runge_iteration_y1(t, y1r, y2r, j-1, step)
+    
+for j in range(1, n2):
+    y1r_2[j], y2r_2[j] = runge_iteration_y1(t2, y1r_2, y2r_2, j-1, step2)
+
+for j in range(1, 3):
+    y1a[j] = y1r[j]
+    y2a[j] = y2r[j]
+
+for j in range(3, n):
+    y1a[j] = adams_iteration_y1(t, y1a, y2a, j-1, step)
+    y2a[j] = adams_iteration_y2(t, y1a, y2a, j-1, step)
+
+for j in range(1, n):
+    y1t[j], y2t[j] = trapezium_iteration(t, y1t, y2t, j-1, step)
+    
+for j in range(1, n2):
+    y1t_2[j], y2t_2[j] = trapezium_iteration(t2, y1t_2, y2t_2, j-1, step2)
+
+
+# ## Part 4: Error calculation
+
+err_r_1 = max(max(np.absolute(y1r[::2] - y1r_2)), max(np.absolute(y2r[::2] - y2r_2))) / 7
+
+err_t_1 = max(max(np.absolute(y1t[::2] - y1t_2)), max(np.absolute(y2t[::2] - y2t_2))) / 3
+
+err_r_2 = max(max(np.absolute(y1_0 - y1r)), max(np.absolute(y2_0 - y2r)))
+
+err_a_2 = max(max(np.absolute(y1_0 - y1a)), max(np.absolute(y2_0 - y2a)))
+
+err_t_2 = max(max(np.absolute(y1_0 - y1t)), max(np.absolute(y2_0 - y2t)))
+
+# ## Part 5: Export results
+
+d = {'t_j':t, 'y1_0':y1_0, 'y2_0':y2_0, 'y1r':y1r, 'y2r':y2r, 'y1a':y1a, 'y2a':y2a, 'y1t':y1t, 'y2t':y2t}
+
+df = pd.DataFrame(data = d)
+df = df.to_excel("output2.xlsx")
+\end{verbatim}
+
+\item%
+\underline{Результаты работы}
+
+\includegraphics[scale=1.0]{results.png}
+
+\vskip 0.2in
+
+\includegraphics[scale=1.0]{err.png}
+
+\vskip 0.2in
+
+\item%
+\underline{Выводы}
+
+Как можно увидеть из оценки погрешностей, рассмотренные методы действительно обеспечивают заявленные порядки точности при нахождении приближенного решения задачи Коши для ОДУ.
+\end{enumerate}%
+\end{document}
